@@ -50,7 +50,7 @@ module.exports = {
                 res.send(data);
             })
             .catch(err => {
-                res.status(400).send('Registro eliminado.');
+                res.status(400).send('Error al intentar eliminar registro.');
             });
     },
     editar: (req,res) => {
