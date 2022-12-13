@@ -63,7 +63,7 @@ module.exports = {
                 res.send(data);
             })
             .catch(err => {
-                res.status(400).send('Error al intentar buscar por ID.');
+                res.status(400).send('Error al intentar actualizar.');
             });
     }
 }
