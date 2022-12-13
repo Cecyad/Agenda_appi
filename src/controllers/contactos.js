@@ -43,12 +43,14 @@ module.exports = {
     },
     eliminar: (req,res) => {
         const id = req.params.id;
-        contacto.findOneAndDelete({_id:id})
-            .then(() => {
-                res.send("Registro eliminado.");
+        contacto.findOne({_id: id })
+            .then(data => {
+                data.status=2;
+                data.save();
+                res.send(data);
             })
             .catch(err => {
-                res.status(400).send('Error al intentar eliminar.');
+                res.status(400).send('Registro eliminado.');
             });
     },
     editar: (req,res) => {
