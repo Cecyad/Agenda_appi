@@ -57,13 +57,12 @@ module.exports = {
     crear: (req,res) => {
         let data = req.body;
         data.idusuario = req.user._id;
-        data.index=new Date().getTime();
 
         contacto.create(data)
         .then(response => {
             res.send(response);
         }).catch(err => {
-            res.status(400).send('Error al intentar eliminar registro.');
+            res.status(400).send('Error al intentar crear registro.');
         });
     },
     eliminar: (req,res) => {
