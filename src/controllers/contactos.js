@@ -1,9 +1,28 @@
 const { response } = require('express');
 const contacto = require('./../models/contacto');
+const jwt = require('jsonwebtoken');
+//require('dotenv').config();
 
 module.exports = {
     listar: (req,res) => {
-        const parametro = req.params.parametro;
+        
+        
+            //console.log('Objeto',decoded);
+            //res.send('');
+            //console.log('UserID: ',decoded._id);
+            //contacto.find({status: 1, idusuario: req.user._id})
+            //contacto.find({status: 1})
+
+            contacto.find({status: 1, idusuario: req.user._id})
+                .then(data => {
+                    res.send(data);
+                })
+                .catch(err => {
+                    res.status(400).send('algo salio mal'); //Bad requests
+                });
+
+        
+        /*const parametro = req.params.parametro;
         if (parametro != undefined){
             if (parametro.includes('@') == true){
                 nom={status:1,correo: parametro};
@@ -23,11 +42,11 @@ module.exports = {
             })
             .catch(err => {
                 res.status(400).send('Error al intentar listar.');
-            });
+            });*/
     },
     ver: (req,res) => {
         const id = req.params.id;
-        contacto.findOne({status: 1,_id: id })
+        contacto.findOne({status: 1,_id: id,idusuario: req.user._id})
             .then(data => {
                 res.send(data);
             })
@@ -36,14 +55,20 @@ module.exports = {
             });
     },
     crear: (req,res) => {
-        const data = req.body;
-        contacto.create(data).then(response => {
+        let data = req.body;
+        data.idusuario = req.user._id;
+        data.index=new Date().getTime();
+
+        contacto.create(data)
+        .then(response => {
             res.send(response);
+        }).catch(err => {
+            res.status(400).send('Error al intentar eliminar registro.');
         });
     },
     eliminar: (req,res) => {
         const id = req.params.id;
-        contacto.findOne({_id: id })
+        contacto.findOne({_id: id,idusuario: req.user._id})
             .then(data => {
                 data.status=2;
                 data.save();
@@ -58,7 +83,9 @@ module.exports = {
         const llave = req.params.llave;
         const valor = req.params.valor;
 
-        contacto.findOne({_id: id })
+        //console.log(req.user._id,"----",id,"----",llave,"----",valor);
+
+        contacto.findOne({_id: id, idusuario: req.user._id})
             .then(data => {
                 data[llave]=valor;
                 data.save();
